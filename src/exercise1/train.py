@@ -1,13 +1,16 @@
-from exercise1.model import MyAwesomeModel
-from exercise1.data import corrupt_mnist
-import torch
 import matplotlib.pyplot as plt
+import torch
 import typer
+
+from exercise1.data import corrupt_mnist
+from exercise1.model import MyAwesomeModel
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
 
-def train(lr: float = 1e-3, batch_size: int = 32, epochs: int = 10, save_model: str = "models/model.pth", plot: bool = True) -> None:
+def train(
+    lr: float = 1e-3, batch_size: int = 32, epochs: int = 10, save_model: str = "models/model.pth", plot: bool = True
+) -> None:
     """Train a model on MNIST."""
     print("Training day and night")
     print(f"{lr=}, {batch_size=}, {epochs=}")
@@ -48,6 +51,7 @@ def train(lr: float = 1e-3, batch_size: int = 32, epochs: int = 10, save_model: 
         axs[1].plot(statistics["train_accuracy"])
         axs[1].set_title("Train accuracy")
         fig.savefig("reports/figures/training_statistics.png")
+
 
 if __name__ == "__main__":
     typer.run(train)

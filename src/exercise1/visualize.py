@@ -1,16 +1,15 @@
-from exercise1.model import MyAwesomeModel
-from exercise1.data import corrupt_mnist
-import torch
 import matplotlib.pyplot as plt
+import torch
 import typer
-
-from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+
+from exercise1.model import MyAwesomeModel
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
-def visualize(model_checkpoint: str = "models/model.pth", figure_name: str = "embeddings.png") -> None:
 
+def visualize(model_checkpoint: str = "models/model.pth", figure_name: str = "embeddings.png") -> None:
     model: torch.nn.Module = MyAwesomeModel().to(DEVICE)
     model.load_state_dict(torch.load(model_checkpoint))
     model.eval()
@@ -26,7 +25,7 @@ def visualize(model_checkpoint: str = "models/model.pth", figure_name: str = "em
             predictions = model(images)
             embeddings.append(predictions)
             targets.append(target)
-        
+
         embeddings = torch.cat(embeddings).numpy()
         targets = torch.cat(targets).numpy()
 
@@ -36,7 +35,7 @@ def visualize(model_checkpoint: str = "models/model.pth", figure_name: str = "em
         tsne = TSNE(n_components=2, random_state=1)
         embeddings = tsne.fit_transform(embeddings)
 
-        plt.figure(figsize=(10,10))
+        plt.figure(figsize=(10, 10))
         for i in range(10):
             idxs = targets == i
             plt.scatter(embeddings[idxs, 0], embeddings[idxs, 1], label=str(i), alpha=0.6)
@@ -44,7 +43,6 @@ def visualize(model_checkpoint: str = "models/model.pth", figure_name: str = "em
         plt.title("t-SNE visualization of MNIST embeddings")
         plt.savefig(f"reports/figures/{figure_name}")
         print(f"Saved embedding visualization to reports/figures/{figure_name}")
-
 
 
 if __name__ == "__main__":

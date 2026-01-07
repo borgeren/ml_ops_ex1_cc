@@ -1,8 +1,6 @@
-# docker compose -f train.dockercompose.yml up
-
 services:
   train:
-    image: train:latest
+    image: evaluate:latest
     container_name: experiment1
     volumes:
       - ./models:/models

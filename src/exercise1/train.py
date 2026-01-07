@@ -5,26 +5,33 @@ import typer
 from exercise1.data import corrupt_mnist
 from exercise1.model import MyAwesomeModel
 
+import hydra
+from omegaconf import DictConfig
+
+import logging
+
+log = logging.getLogger(__name__)
+
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
-
+@hydra.main(version_base="1.3", config_path="../../configs", config_name="conf.yaml")
 def train(
-    lr: float = 1e-3, batch_size: int = 32, epochs: int = 10, save_model: str = "models/model.pth", plot: bool = True
+    cfg: DictConfig, save_model: str = "models/model.pth", plot: bool = True
 ) -> None:
     """Train a model on MNIST."""
-    print("Training day and night")
-    print(f"{lr=}, {batch_size=}, {epochs=}")
+    log.info("Training day and night")
+    log.info(f"{cfg.training.learning_rate=}, {cfg.training.batch_size=}, {cfg.training.epochs=}")
 
-    model = MyAwesomeModel().to(DEVICE)
+    model = MyAwesomeModel(dropout_rate=cfg.model.dropout_rate).to(DEVICE)
     train_set, _ = corrupt_mnist()
 
-    train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size)
+    train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=cfg.training.batch_size)
 
     loss_fn = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(model.parameters(), lr=cfg.training.learning_rate)
 
     statistics = {"train_loss": [], "train_accuracy": []}
-    for epoch in range(epochs):
+    for epoch in range(cfg.training.epochs):
         model.train()
         for i, (img, target) in enumerate(train_dataloader):
             img, target = img.to(DEVICE), target.to(DEVICE)
@@ -39,9 +46,9 @@ def train(
             statistics["train_accuracy"].append(accuracy)
 
             if i % 100 == 0:
-                print(f"Epoch {epoch}, iter {i}, loss: {loss.item()}")
+                log.info(f"Epoch {epoch}, iter {i}, loss: {loss.item()}")
 
-    print("Training complete")
+    log.info("Training complete")
     if save_model:
         torch.save(model.state_dict(), save_model)
     if plot:
@@ -53,7 +60,8 @@ def train(
         fig.savefig("reports/figures/training_statistics.png")
 
 def main():
-    typer.run(train)
+    # typer.run(train)
+    train()
 
 if __name__ == "__main__":
     main()

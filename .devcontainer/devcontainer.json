@@ -1,0 +1,5 @@
+{
+    "name": "exercise1_working_env",
+    "dockerFile": "Dockerfile",
+    "postCreateCommand": "uv sync --locked"
+}

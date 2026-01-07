@@ -1,5 +1,7 @@
+# docker compose -f evaluate.dockercompose.yml up
+
 services:
-  train:
+  evaluate:
     image: evaluate:latest
     container_name: experiment1
     volumes:

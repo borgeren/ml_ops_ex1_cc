@@ -10,6 +10,7 @@ authors = [
   { name = "jep", email = "your@email.com" },
 ]
 
+
 keywords = ["machine learning", "MLOps"]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -60,3 +61,7 @@ lint.select = ["I"]
 
 [tool.coverage.run]
 omit = ["tests/*"]
+
+[project.scripts]
+train = "exercise1.train:main"
+evaluate = "exercise1.evaluate:main"

@@ -52,6 +52,8 @@ def train(
         axs[1].set_title("Train accuracy")
         fig.savefig("reports/figures/training_statistics.png")
 
+def main():
+    typer.run(train)
 
 if __name__ == "__main__":
-    typer.run(train)
+    main()

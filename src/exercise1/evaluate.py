@@ -27,6 +27,8 @@ def evaluate(model_checkpoint: str = "models/model.pth") -> None:
         total += target.size(0)
     print(f"Test accuracy: {correct / total}")
 
+def main():
+    typer.run(evaluate)
 
 if __name__ == "__main__":
-    typer.run(evaluate)
+    main()

@@ -1,0 +1,11 @@
+services:
+  train:
+    image: train:latest
+    container_name: experiment1
+    volumes:
+      - ./models:/models
+      - ./reports:/reports
+      # - ./configs:/app/configs
+    environment:
+      - PYTHONUNBUFFERED=1
+    # command: python -u your_script.py  # Uncomment and set if you want to override the default command

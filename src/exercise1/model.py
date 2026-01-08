@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 import hydra
+from omegaconf import DictConfig
 
 import logging
 
@@ -30,7 +31,7 @@ class MyAwesomeModel(nn.Module):
         return self.fc1(x)
 
 @hydra.main(version_base="1.3", config_path="./configs", config_name="model_conf.yaml")
-def main():
+def main(cfg: DictConfig) -> None:
     model = MyAwesomeModel()
     log.info(f"Model architecture: {model}")
     log.info(f"Number of parameters: {sum(p.numel() for p in model.parameters())}")
